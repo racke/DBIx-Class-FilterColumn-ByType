@@ -32,11 +32,10 @@ my %WriteMakefileArgs = (
     "DBIx::Class::FilterColumn" => 0,
     "SQL::Translator" => "0.11006",
     "base" => 0,
-    "namespace::clean" => 0,
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "1.122120",
+  "VERSION" => "1.122121",
   "test" => {
     "TESTS" => "t/*.t"
   }

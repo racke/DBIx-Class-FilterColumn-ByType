@@ -25,7 +25,6 @@ requires:
   DBIx::Class::FilterColumn: 0
   SQL::Translator: 0.11006
   base: 0
-  namespace::clean: 0
   perl: 5.006
   strict: 0
   warnings: 0
@@ -33,7 +32,7 @@ resources:
   bugtracker: https://github.com/mphill22/DBIx-Class-FilterColumn-ByType/issues
   homepage: https://github.com/mphill22/DBIx-Class-FilterColumn-ByType/wiki
   repository: git://github.com/mphill22/DBIx-Class-FilterColumn-ByType.git
-version: 1.122120
+version: 1.122121
 x_Dist_Zilla:
   plugins:
     -

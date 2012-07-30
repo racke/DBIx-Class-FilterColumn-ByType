@@ -9,7 +9,7 @@
 package DBIx::Class::FilterColumn::ByType;
 # ABSTRACT: Apply FilterColumn by type instead of name
 BEGIN {
-our $VERSION = '1.122120'; # VERSION
+our $VERSION = '1.122121'; # VERSION
 }
 
 use strict;
@@ -20,8 +20,6 @@ use base qw/DBIx::Class::FilterColumn/;
 __PACKAGE__->mk_classdata(
   __filter_column_pairs => {}
 );
-
-use namespace::clean;
 
 sub filter_columns_by_type {
   my ($self, $types, $hash) = @_;
@@ -76,7 +74,7 @@ DBIx::Class::FilterColumn::ByType - Apply FilterColumn by type instead of name
 
 =head1 VERSION
 
-version 1.122120
+version 1.122121
 
 =head1 SYNOPSIS
 
