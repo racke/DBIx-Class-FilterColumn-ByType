@@ -9,7 +9,7 @@
 package DBIx::Class::FilterColumn::ByType;
 # ABSTRACT: Apply FilterColumn by type instead of name
 BEGIN {
-our $VERSION = '1.122090'; # VERSION
+our $VERSION = '1.122120'; # VERSION
 }
 
 use strict;
@@ -17,22 +17,49 @@ use warnings;
 
 use base qw/DBIx::Class::FilterColumn/;
 
+__PACKAGE__->mk_classdata(
+  __filter_column_pairs => {}
+);
+
 use namespace::clean;
 
 sub filter_columns_by_type {
-  my ($self, @args) = @_;
+  my ($self, $types, $hash) = @_;
 
-  while (my ($types, $hash) = splice @args, 0, 2) {
-    # flatten
-    for my $type (map { (ref) ? @$_ : $_ } $types) {
-      # find matching columns
+  # flatten
+  my @types = map { (ref) ? @$_ : $_ } $types;
+
+  # find matching columns
+  for my $type (@types) {
+    # cache
+    $self->__filter_column_pairs->{$type} = $hash;
+
+    # this function can be called in two contexts
+    # 1. in a base result class, for applying to an entire schema
+    # 2. in an instantiated result class
+      # in the case of 1, result_source_instance does not exist at invocation.
+    if ($self->can('result_source_instance')) {
       my $cols = $self->columns_info;
       while (my ($col, $attrs) = each %$cols) {
-        next unless $attrs->{data_type} eq $type;
+        next unless $attrs->{data_type} && $attrs->{data_type} eq $type;
 
         # pass through to filter_columns. let validation happen there
         $self->filter_column($col => $hash);
       }
+    }
+  }
+}
+
+
+sub add_columns {
+  my $self = shift;
+
+  $self->next::method(@_);
+
+  while (my ($col, $attrs) = splice @_, 0, 2) {
+    next if not $attrs->{data_type};
+    if (my $spec = $self->__filter_column_pairs->{$attrs->{data_type}}) {
+      $self->filter_column($col => $spec);
     }
   }
 }
@@ -49,7 +76,7 @@ DBIx::Class::FilterColumn::ByType - Apply FilterColumn by type instead of name
 
 =head1 VERSION
 
-version 1.122090
+version 1.122120
 
 =head1 SYNOPSIS
 
@@ -76,8 +103,13 @@ Set up filters for the column types you want to convert.
 
 This module is a subclass of L<DBIx::Class::FilterColumn>, which allows you to
 attach filters by column type, as well as by column name. You should look at
-L<DBIx::Class::FilterColumn> documentation for a full explanation of how that
-works.
+L<DBIx::Class::FilterColumn> documentation for a full explanation of how
+FilterColumn works.
+
+If you'd like to do something like filter all varchars in your entire schema,
+you would only need to create a base result class, then call
+filter_columns_by_type from there. See t/lib/A/Schema inside the dist for an
+example.
 
 =encoding utf-8
 

@@ -14,7 +14,6 @@ my %WriteMakefileArgs = (
   "BUILD_REQUIRES" => {
     "Carp" => 0,
     "DBIx::Class::Core" => 0,
-    "DBIx::Class::ResultSet" => 0,
     "DBIx::Class::Schema" => 0,
     "File::Find" => 0,
     "File::Temp" => 0,
@@ -31,12 +30,13 @@ my %WriteMakefileArgs = (
   "NAME" => "DBIx::Class::FilterColumn::ByType",
   "PREREQ_PM" => {
     "DBIx::Class::FilterColumn" => 0,
+    "SQL::Translator" => "0.11006",
     "base" => 0,
     "namespace::clean" => 0,
     "strict" => 0,
     "warnings" => 0
   },
-  "VERSION" => "1.122090",
+  "VERSION" => "1.122120",
   "test" => {
     "TESTS" => "t/*.t"
   }
